@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checkout - Boom</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/5787/5787018.png">
+  <style>
+    body {
+      background: linear-gradient(to right, #fdfbfb, #ebedee);
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 3em;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    .checkout-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .total {
+      font-weight: bold;
+      font-size: 20px;
+      text-align: right;
+      margin-top: 20px;
+    }
+
+    .checkout-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      background-color: #00b894;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      margin-top: 30px;
+      cursor: pointer;
+    }
+
+    .checkout-btn:hover {
+      background-color: #019875;
+    }
+
+    .dark-mode {
+      background-color: #121212;
+      color: #f1f1f1;
+    }
+
+    .dark-mode .checkout-container {
+      background-color: #1e1e1e;
+      color: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Checkout</h1>
+
+  <div class="checkout-container" id="checkoutContainer">
+    <!-- Items and total will be injected here -->
+  </div>
+
+  <script>
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+      window.location.href = "index.html";
+    }
+
+    const user = JSON.parse(localStorage.getItem("userData"));
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const profile = JSON.parse(localStorage.getItem("profile")) || {};
+    const container = document.getElementById("checkoutContainer");
+
+    if (!cart.length) {
+      container.innerHTML = "<p>Your cart is empty.</p>";
+    } else {
+      let total = 0;
+
+      cart.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "item";
+        row.innerHTML = `<span>${item.name} x${item.quantity}</span><span>₹${item.price * item.quantity}</span>`;
+        container.appendChild(row);
+        total += item.price * item.quantity;
+      });
+
+      const totalDiv = document.createElement("div");
+      totalDiv.className = "total";
+      totalDiv.textContent = `Total: ₹${total}`;
+      container.appendChild(totalDiv);
+
+      const button = document.createElement("button");
+      button.className = "checkout-btn";
+      button.textContent = "Place Order";
+      button.onclick = () => {
+        const order = {
+          username: user.username,
+          items: JSON.stringify(cart),
+          total,
+          date: new Date().toISOString()
+        };
+
+        fetch("https://food-backend-uy99.onrender.com/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(order)
+        })
+        .then(res => res.json())
+        .then(data => {
+          localStorage.removeItem("cart");
+          window.location.href = "confirmation.html";
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Error placing order.");
+        });
+      };
+
+      container.appendChild(button);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+      }
+    });
+  </script>
+
+</body>
+</html>

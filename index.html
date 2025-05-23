@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login- Boom</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/5787/5787018.png">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Lobster&display=swap" rel="stylesheet">
+
+  <style>
+    .content-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 30px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .about-section {
+      flex: 1;
+      padding-right: 40px;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .about-section h3 {
+      margin-top: 0;
+      color: #333;
+      font-size: 26px;
+    }
+
+    body {
+      background-color: white;
+      font-family: Arial, sans-serif;
+      overflow: auto;
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 700%;
+      color: #1E4F91;
+      font-style: italic;
+      text-align: center;
+      margin-bottom: 10px;
+      z-index: 2;
+      position: relative;
+    }
+
+    h2 {
+      font-family: 'Lobster', cursive;
+      font-size: 550%;
+      font-style: italic;
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 20px;
+      z-index: 2;
+      position: relative;
+      animation: sparkle 2s infinite, wiggle 1s infinite;
+      background: linear-gradient(135deg, #888888, #999999, #BBBBBB, #999999, #888888);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(3deg); }
+      75% { transform: rotate(-3deg); }
+    }
+
+    .login-box {
+      background-color: lightblue;
+      width: 300px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px #00000030;
+      margin: 0 auto 30px auto;
+      text-align: left;
+      position: relative;
+      z-index: 2;
+    }
+
+    .login-box input[type="text"],
+    .login-box input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .login-box input[type="submit"] {
+      background-color: blue;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .login-box input[type="submit"]:hover {
+      background-color: darkblue;
+    }
+
+    .forgot-password {
+      display: block;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .forgot-password a {
+      display: inline-block;
+      margin-top: 5px;
+      color: #0000cc;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .forgot-password a:hover {
+      text-decoration: underline;
+    }
+
+    .falling {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-size: cover;
+      animation: fall linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0.5;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Raining food icons -->
+  <script>
+    const items = [
+      { image: 'https://cdn-icons-png.flaticon.com/512/5787/5787018.png' },
+      { image: 'https://cdn-icons-png.flaticon.com/512/1046/1046784.png' },
+      { image: 'https://cdn-icons-png.flaticon.com/512/5787/5787031.png' }
+    ];
+
+    items.forEach(item => {
+      for (let i = 0; i < 10; i++) {
+        const food = document.createElement("div");
+        food.className = "falling";
+        food.style.backgroundImage = `url('${item.image}')`;
+        food.style.left = Math.random() * 100 + "vw";
+        food.style.animationDuration = (Math.random() * 4 + 6) + "s";
+        food.style.animationDelay = Math.random() * 5 + "s";
+        document.body.appendChild(food);
+      }
+    });
+
+    if (localStorage.getItem("isLoggedIn") === "true") {
+      window.location.href = "dashboard.html";
+    }
+  </script>
+
+  <h1><em>Boom's Kitchen</em></h1>
+  <h2><em>Welcome</em></h2>
+
+  <div class="content-wrapper">
+    <div class="about-section">
+      <h3>About Us</h3>
+      <p>Welcome to Food Order! We deliver delicious meals straight to your door. Browse our menu, order online, and enjoy!</p>
+    </div>
+
+    <div class="login-box">
+      <h3>Login</h3>
+      <form onsubmit="login(event)">
+        <label for="username">Username:</label>
+        <input type="text" id="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" required>
+
+        <input type="submit" value="Login">
+
+        <div class="forgot-password">
+          <a href="forgot.html">Forgot Password?</a><br>
+          <a href="signup.html">Don't have an account yet? Sign up here</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function login(event) {
+      event.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      fetch("https://food-backend-uy99.onrender.com/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+      })
+      .then(async res => {
+        const contentType = res.headers.get("content-type");
+        if (!res.ok || !contentType || !contentType.includes("application/json")) {
+          throw new Error("Unexpected response from server.");
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (data.error) return alert(data.error);
+
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userData", JSON.stringify(data.user));
+
+        const profile = JSON.parse(localStorage.getItem("profile")) || {
+          name: data.user.name,
+          email: data.user.email || "",
+          phone: "+91-0000000000",
+          address: ""
+        };
+
+        localStorage.setItem("profile", JSON.stringify(profile));
+        window.location.href = "dashboard.html";
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Login failed. Please try again.");
+      });
+    }
+  </script>
+
+</body>
+</html>

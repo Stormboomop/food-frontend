@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shopping-Boom</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/5787/5787018.png">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Lobster&display=swap" rel="stylesheet">
+  <style>
+  body {
+    background-color: #007BFF;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding-top: 100px;
+    margin: 0;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  body.dark-mode {
+    background-color: #121212;
+    color: #f1f1f1;
+  }
+
+  h1 {
+    font-size: 400%;
+    font-family: 'Pacifico', cursive;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 20px;
+  }
+
+  .special-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(to right, #FFD700, #FFA500);
+    color: #000;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    animation: floatUp 3s ease-in-out infinite alternate;
+    z-index: 10;
+  }
+
+  @keyframes floatUp {
+    from { transform: translateY(0); }
+    to { transform: translateY(-10px); }
+  }
+
+  .hamburger {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 11;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 60px;
+    left: 20px;
+    background-color: #fffacd;
+    color: black;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    display: none;
+    flex-direction: column;
+    z-index: 999;
+    padding: 10px;
+    min-width: 150px;
+  }
+
+  .dropdown-menu a {
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+
+  .dropdown-menu a:hover {
+    background-color: #f0f0f0;
+  }
+
+  .icon-row {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 130px;
+    left: 20px;
+    gap: 10px;
+    z-index: 12;
+  }
+
+  .cart-icon,
+  .dark-mode-toggle {
+    font-size: 22px;
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: #f1f1f1;
+    border-radius: 8px;
+    color: black;
+    position: relative;
+  }
+
+  .cart-icon:hover,
+  .dark-mode-toggle:hover {
+    background-color: #e0e0e0;
+  }
+
+  #cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 7px;
+    font-size: 12px;
+  }
+
+  .menu-section {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 20px;
+  }
+
+  .menu-item {
+    background-color: white;
+    color: black;
+    border-radius: 15px;
+    width: 220px;
+    padding: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+
+  .menu-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  }
+
+  .menu-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .menu-item h3 {
+    margin: 10px 0 5px;
+    font-family: 'Lobster', cursive;
+  }
+
+  .cart-controls {
+    margin-top: 10px;
+  }
+
+  .cart-controls input[type="number"] {
+    width: 50px;
+    padding: 5px;
+    margin-right: 10px;
+  }
+
+  .cart-controls button {
+    padding: 5px 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .cart-controls button:hover {
+    background-color: #218838;
+  }
+
+  #searchInput {
+    padding: 10px;
+    width: 300px;
+    margin: 20px auto;
+    display: block;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+</style>
+
+</head>
+<body>
+
+  <div class="special-badge">🍽️ Today's Special: Spicy Paneer Pizza!</div>
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
+  <div class="dropdown-menu" id="dropdownMenu">
+    <a href="user.html">👤 User</a>
+    <a href="orders.html">📦 Orders</a>
+    <a href="offers.html">🎁 Offers</a>
+    <a href="#" onclick="logout()">🚪 Logout</a>
+  </div>
+
+  <div class="icon-row">
+    <div class="dark-mode-toggle" onclick="toggleDarkMode()">🌓</div>
+    <div class="cart-icon" onclick="goToCart()">🛒 <span id="cart-count">0</span></div>
+  </div>
+
+  <h1 id="greeting">Welcome to Food Order!</h1>
+  <p id="login-status">You have successfully logged in.</p>
+
+  <input type="text" id="searchInput" placeholder="Search food." onkeyup="filterItems()">
+
+  <div class="menu-section" id="menuSection">
+    <div class="menu-item food-item">
+      <img src="file:///D:/my%20website%20lol/Homemade-Cheese-Burger.webp" alt="Burger">
+      <h3>Cheesy Burger</h3>
+      <p>₹120</p>
+      <div class="cart-controls">
+        <input type="number" min="1" value="1">
+        <button onclick="addToCart('Cheesy Burger', 120)">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="menu-item food-item">
+      <img src="file:///D:/my%20website%20lol/Homemade-Pizza.webp" alt="Pizza">
+      <h3>Veggie Pizza</h3>
+      <p>₹250</p>
+      <div class="cart-controls">
+        <input type="number" min="1" value="1">
+        <button onclick="addToCart('Veggie Pizza', 250)">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="menu-item food-item">
+      <img src="file:///D:/my%20website%20lol/Homemade-French-Fries.webp" alt="Fries">
+      <h3>French Fries</h3>
+      <p>₹80</p>
+      <div class="cart-controls">
+        <input type="number" min="1" value="1">
+        <button onclick="addToCart('French Fries', 80)">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+      window.location.href = "index.html";
+    }
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function addToCart(item, price) {
+      const quantity = parseInt(event.target.previousElementSibling.value);
+      const existingItem = cart.find(cartItem => cartItem.name === item);
+
+      if (existingItem) {
+        existingItem.quantity += quantity;
+      } else {
+        cart.push({ name: item, price: price, quantity: quantity });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartBadge();
+      alert(`${item} x${quantity} added to cart for ₹${price * quantity}`);
+    }
+
+    function updateCartBadge() {
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById('cart-count').textContent = totalItems;
+    }
+
+    function goToCart() {
+      window.location.href = "cart.html";
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+
+    function toggleMenu() {
+      const menu = document.getElementById('dropdownMenu');
+      menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function filterItems() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      const items = document.querySelectorAll(".food-item");
+
+      items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(input) ? "block" : "none";
+      });
+    }
+
+    function logout() {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("cart");
+      alert("You have been logged out.");
+      window.location.href = "index.html";
+    }
+
+    document.addEventListener('DOMContentLoaded', updateCartBadge);
+  </script>
+
+</body>
+</html>

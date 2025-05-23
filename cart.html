@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>🛒Your Cart</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/5787/5787018.png">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #d3d3d3;
+      padding: 40px;
+      margin: 0;
+    }
+
+    h1 {
+      text-align: center;
+      font-family: 'Pacifico', cursive;
+      color: #333;
+    }
+
+    .cart-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-info {
+      flex: 2;
+    }
+
+    .item-actions {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .item-actions input {
+      width: 50px;
+      padding: 5px;
+    }
+
+    .remove-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .remove-btn:hover {
+      background-color: #c82333;
+    }
+
+    .total-section {
+      text-align: right;
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .checkout-btn {
+      margin-top: 20px;
+      padding: 10px 25px;
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      float: right;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .checkout-btn:hover {
+      background-color: #218838;
+    }
+
+    .back-button {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: blue;
+      color: white;
+      padding: 10px 18px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #e0e0e0;
+    }
+
+    .empty-message {
+      text-align: center;
+      font-family: 'Pacifico', cursive;
+      font-size: 24px;
+      color: #555;
+      margin-top: 50px;
+    }
+
+body.dark-mode {
+  background-color: #121212 !important;
+  color: #f1f1f1 !important;
+}
+
+.dark-mode .checkout-container,
+.dark-mode .user-profile,
+.dark-mode .cart-container,
+.dark-mode .order-card,
+.dark-mode .confirmation-box {
+  background-color: #1e1e1e !important;
+  color: #f1f1f1 !important;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.05);
+}
+
+  </style>
+</head>
+<body>
+
+  <h1>Your Cart</h1>
+  <div class="cart-container" id="cartContainer"></div>
+
+  <div class="total-section" id="totalPrice">Total: ₹0</div>
+  <a href="checkout.html" class="checkout-btn" id="checkoutBtn">Proceed to Checkout</a>
+
+  <a href="dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <script>
+    function renderCart() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const container = document.getElementById('cartContainer');
+      const totalPriceEl = document.getElementById('totalPrice');
+      const checkoutBtn = document.getElementById('checkoutBtn');
+      container.innerHTML = '';
+      let total = 0;
+
+      if (cart.length === 0) {
+        totalPriceEl.style.display = 'none';
+        checkoutBtn.style.display = 'none';
+        container.innerHTML = `<div class="empty-message">Your cart is feeling lonely! 🛒<br>Go add some delicious items 😋</div>`;
+        return;
+      }
+
+      totalPriceEl.style.display = 'block';
+      checkoutBtn.style.display = 'inline-block';
+
+      cart.forEach((item, index) => {
+        total += item.price * item.quantity;
+
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <div class="item-info">
+            <strong>${item.name}</strong><br>₹${item.price} x ${item.quantity}
+          </div>
+          <div class="item-actions">
+            <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, this.value)">
+            <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+
+      totalPriceEl.textContent = `Total: ₹${total}`;
+    }
+
+    function updateQuantity(index, value) {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart[index].quantity = parseInt(value);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderCart();
+    }
+
+    function removeItem(index) {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderCart();
+    }
+
+    // Initial render
+    renderCart();
+
+
+  // Apply saved theme on load
+  document.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark-mode");
+    }
+  });
+
+  // Toggle and save theme
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+    const isDark = document.body.classList.contains("dark-mode");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+
+
+  </script>
+
+</body>
+</html>

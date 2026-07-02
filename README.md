@@ -3,6 +3,17 @@
 A full-stack food ordering web application that provides a smooth and interactive online food ordering experience. Users can browse the menu, add items to their cart, manage quantities, authenticate securely, and place orders through a responsive interface.
 
 ---
+## 🌐 Live Demo
+
+### 🍽️ Website
+
+https://stormboomop.github.io/food-frontend/
+
+### ⚙️ Backend API
+
+https://food-backend-uy99.onrender.com
+
+---
 
 ## 🌐 Repositories
 

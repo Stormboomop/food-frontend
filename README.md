@@ -178,32 +178,25 @@ This structure allows secure user authentication, menu management, and order tra
 
 ### 🏠 Home Page
 
-![Home](screenshots/home.png)
+![Home](login.png)
 
 ---
 
 ### 🍔 Food Menu
 
-![Menu](screenshots/menu.png)
+![Menu](home.png)
 
 ---
 
 ### 🛒 Shopping Cart
 
-![Cart](screenshots/cart.png)
+![Cart](cart.png)
 
 ---
 
-### 💳 Checkout
+### 💳 Profile
 
-![Checkout](screenshots/checkout.png)
-
----
-
-### 📱 Responsive Design
-
-![Responsive](screenshots/mobile.png)
-
+![Profile](profile.png)
 ---
 
 ## 📚 What I Learned
